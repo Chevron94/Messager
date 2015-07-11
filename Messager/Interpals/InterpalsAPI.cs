@@ -105,12 +105,54 @@ namespace Interpals
             return result;
         }
 
-        public static List<Message> GetMessages(string thread_id, bool all=false)
+        public static List<Message> GetMessages(string thread_id, int count_pages)
         {
             Stack<Message> res = new Stack<Message>();
             int page_num = 1;
             int current_page = 1;
-            int max_page = all ? Int32.MaxValue : 1;
+            int max_page = count_pages;
+            for (page_num = 1; page_num <= max_page; page_num++)
+            {
+                var resg = Http.SteamWebRequest("http://www.interpals.net/pm.php", "thread_id=" + thread_id + "&page=" + page_num, dialogs_url, cn);
+                if (resg == null)
+                {
+                    Thread.Sleep(50);
+                    resg = Http.SteamWebRequest("http://www.interpals.net/pm.php", "thread_id=" + thread_id + "&page=" + page_num, dialogs_url, cn);
+                }
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(resg);
+
+                var conversation_block = doc.GetElementbyId("conversation");
+                current_page = Int32.Parse(conversation_block.Attributes[1].Value);
+                if (current_page != page_num || conversation_block.ChildNodes[1].Attributes[0].Value == "no_messages")
+                    return res.ToList<Message>();
+                var messages = conversation_block.ChildNodes.ToArray();
+                int length = messages.Length;
+
+                for (int i = 1; i < length; i += 2)
+                {
+                    bool msg_readed;
+                    if (messages[i].Attributes[0].Value == "pm_msg pm_unread")
+                        msg_readed = false;
+                    else msg_readed = true;
+                    string msg_id = messages[i].Attributes[1].Value.Split('_')[1];
+
+                    string msg_from = messages[i].ChildNodes[3].ChildNodes[1].InnerText;
+                    string msg_time = messages[i].ChildNodes[5].ChildNodes[1].InnerText;
+                    string msg_text = System.Web.HttpUtility.HtmlDecode(messages[i].ChildNodes[7].InnerText).Trim();
+                    Message msg = new Message(msg_id, msg_readed, msg_from, msg_time, msg_text);
+                    res.Push(msg);
+                }
+            }
+            return res.ToList<Message>();
+        }
+
+        public static List<Message> GetMessages(string thread_id, string last_message_id="-1")
+        {
+            Stack<Message> res = new Stack<Message>();
+            int page_num = 1;
+            int current_page = 1;
+            int max_page = Int32.MaxValue;
             for (page_num = 1; page_num<=max_page ; page_num++)
             {
                 var resg = Http.SteamWebRequest("http://www.interpals.net/pm.php", "thread_id=" + thread_id + "&page="+page_num, dialogs_url, cn);
@@ -141,6 +183,8 @@ namespace Interpals
                     string msg_text = System.Web.HttpUtility.HtmlDecode(messages[i].ChildNodes[7].InnerText).Trim();
                     Message msg = new Message(msg_id, msg_readed, msg_from, msg_time, msg_text);
                     res.Push(msg);
+                    if (msg_id == last_message_id)
+                        return res.ToList<Message>();
                 }
             }
             return res.ToList<Message>();
@@ -199,10 +243,15 @@ namespace Interpals
                 int age = Int32.Parse(log_age[1]);
                 string country_flag_url = tmp[3].ChildNodes[3].ChildNodes[0].Attributes[1].Value;
                 string city = tmp[3].ChildNodes[5].InnerText;
-                string message = System.Web.HttpUtility.HtmlDecode(tmp[5].InnerText.Trim());
+
                 bool Readed = tmp[5].Attributes[1].Value.Split(' ').Length == 1 && tmp[1].ChildNodes.Count != 5;
+                Message message = GetMessages(thread_id, 1).Last();
+                message.Readed = Readed;
+                //string message = System.Web.HttpUtility.HtmlDecode(tmp[5].InnerText.Trim());
+
+                //bool Readed = tmp[5].Attributes[1].Value.Split(' ').Length == 1 && tmp[1].ChildNodes.Count != 5;
                 string LastMessageFrom = tmp[5].ChildNodes.Count > 1 ? "" : login;
-                Friend first = new Friend(uid,login, thread_id, photo_url, age, country_flag_url, country, city,new Message("",Readed,LastMessageFrom,"",message),online);
+                Friend first = new Friend(uid,login, thread_id, photo_url, age, country_flag_url, country, city,message,online);
                 if (res.Contains(first,(new FriendsComparer())))
                 {
                     return res;
@@ -229,10 +278,12 @@ namespace Interpals
                     age = Int32.Parse(log_age[1]);
                     country_flag_url = tmp[3].ChildNodes[3].ChildNodes[0].Attributes[1].Value;
                     city = tmp[3].ChildNodes[5].InnerText;
-                    message = System.Web.HttpUtility.HtmlDecode(tmp[5].InnerText.Trim());
+                    Readed = tmp[5].Attributes[1].Value.Split(' ').Length == 1 && tmp[1].ChildNodes.Count != 5;
+                    message = GetMessages(thread_id, 1).Last();
+                    message.Readed = Readed;
                     Readed = tmp[5].Attributes[1].Value.Split(' ').Length == 1;
                     LastMessageFrom = tmp[5].ChildNodes.Count > 1 ? "" : login;
-                    res.Add(new Friend(uid,login, thread_id, photo_url, age, country_flag_url, country, city, new Message("", Readed, LastMessageFrom, "", message), online));
+                    res.Add(new Friend(uid,login, thread_id, photo_url, age, country_flag_url, country, city,message, online));
                 }
             }
 

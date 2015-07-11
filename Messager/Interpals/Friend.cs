@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Messager.Interpals;
 using System.Threading;
+using System.Collections.ObjectModel;
+using System.Data.Objects;
 namespace Interpals
 {
     public class Friend
@@ -19,7 +21,15 @@ namespace Interpals
         public string Country_Flag { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
-        public Message LastMessage { get; set; }
+        public ObservableCollection<Message> MessageHistory { get; set; }
+
+        public Message LastMessage
+        {
+            get
+            {
+                return MessageHistory.Last();
+            }
+        }
  
         public bool Online { get; set; }
 
@@ -33,7 +43,9 @@ namespace Interpals
             Country_Flag = _Country_Flag_Url;
             City = _City;
             Photo = _Photo_Url;
-            LastMessage = _LastMessage;
+            MessageHistory = new ObservableCollection<Message>();
+            MessageHistory.Add(_LastMessage);
+            //LastMessage = _LastMessage;
             Online = _Online;
             ConvertPicturesLinks();
         }
@@ -45,15 +57,28 @@ namespace Interpals
 
         public List<Message> GetLastMessages()
         {
-            return InterpalsAPI.GetMessages(Thread_Id);
+            if (MessageHistory.Count == 0)
+            {
+                return InterpalsAPI.GetMessages(Thread_Id, 1);
+
+            }
+            else
+            {
+                try
+                {
+                    return InterpalsAPI.GetMessages(Thread_Id, MessageHistory.First(msg => msg.Readed == false).ID_Message);
+                }
+                catch
+                {
+                    return InterpalsAPI.GetMessages(Thread_Id, MessageHistory.Last().ID_Message);
+                }
+            }
         }
 
         public void GetAllMessages()
         {
-            /*if (!File.Exists(System.AppDomain.CurrentDomain.BaseDirectory+@"history\"+NickName+".txt"))
-                File.Create(System.AppDomain.CurrentDomain.BaseDirectory+@"history\"+NickName+".txt");*/
-            List<Message> res = InterpalsAPI.GetMessages(Thread_Id, true);
-
+            
+            /*
             StreamWriter writer = new StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + @"history\" + NickName + ".txt",false);
 
             foreach (Message m in res)
@@ -61,8 +86,27 @@ namespace Interpals
                 writer.WriteLine(m.ToString());
                 writer.WriteLine();
             }
-            writer.Close();
-            //return res;
+            writer.Close();*/
+            InterpalsEntities Context = new InterpalsEntities();
+            string last;
+            try
+            {
+                var id = Context.Messages.Where("it.ID_Thread = @ID_Thread", new ObjectParameter("ID_Thread", Thread_Id)).Max(p => p.ID);
+                last = Context.Messages.Where("it.ID=@ID", new ObjectParameter("ID", id)).First().ID_Message;
+            }
+            catch
+            {
+                last = "";
+            }
+            List<Message> res = InterpalsAPI.GetMessages(Thread_Id, last);
+            int init = last == "" ? 0 : 1;
+            for (int i = init; i < res.Count; i++ )
+            {
+                Message m = res[i];
+                Messages msg = new Messages() { From = m.From, ID_Message = m.ID_Message, ID_Thread = Thread_Id, Text = m.Text, Time = m.Time };
+                Context.AddToMessages(msg);
+            }
+            Context.SaveChanges();
         }
 
         private void ConvertPicturesLinks()

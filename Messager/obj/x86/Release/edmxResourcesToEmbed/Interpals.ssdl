@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="InterpalsModel.Store" Alias="Self" Provider="System.Data.SQLite" ProviderManifestToken="ISO8601" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="InterpalsModelStoreContainer">
+    <EntitySet Name="Messages" EntityType="InterpalsModel.Store.Messages" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="InterpalsModel.Store.Users" store:Type="Tables" store:Name="Users">
+      <DefiningQuery>SELECT 
+      [Users].[ID_User] AS [ID_User], 
+      [Users].[NickName] AS [NickName], 
+      [Users].[ID_Thread] AS [ID_Thread], 
+      [Users].[Age] AS [Age], 
+      [Users].[Photo] AS [Photo], 
+      [Users].[Country] AS [Country], 
+      [Users].[City] AS [City]
+      FROM [Users] AS [Users]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+  <EntityType Name="Messages">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID_Message" Type="nvarchar" Nullable="false" MaxLength="20" />
+    <Property Name="ID_Thread" Type="nvarchar" Nullable="false" MaxLength="20" />
+    <Property Name="From" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="Time" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="Text" Type="nvarchar" Nullable="false" />
+    <Property Name="ID" Type="integer" Nullable="false" StoreGeneratedPattern="Identity" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'main.Users' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="ID_User" />
+      <PropertyRef Name="NickName" />
+      <PropertyRef Name="ID_Thread" />
+      <PropertyRef Name="Age" />
+      <PropertyRef Name="Photo" />
+      <PropertyRef Name="Country" />
+      <PropertyRef Name="City" />
+    </Key>
+    <Property Name="ID_User" Type="nvarchar" Nullable="false" MaxLength="20" />
+    <Property Name="NickName" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="ID_Thread" Type="nvarchar" Nullable="false" MaxLength="20" />
+    <Property Name="Age" Type="integer" Nullable="false" />
+    <Property Name="Photo" Type="nvarchar" Nullable="false" MaxLength="500" />
+    <Property Name="Country" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="City" Type="nvarchar" Nullable="false" MaxLength="100" />
+  </EntityType>
+</Schema>

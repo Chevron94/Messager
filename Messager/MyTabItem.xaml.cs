@@ -23,14 +23,14 @@ namespace Messager
     public partial class MyTabItem : UserControl
     {
         public Friend friend;
-        ObservableCollection<Message> messages;
+        //ObservableCollection<Message> messages;
         string nickname;
         MediaPlayer mp = new MediaPlayer();
         bool stop = false;
         string last_message_id;
         bool last_message_status;
         Thread t;
-        public MyTabItem(Friend f, string _nickname, bool program = false)
+        public MyTabItem(ref Friend f, string _nickname, bool program = false)
         {
             InitializeComponent();
             mp.Open(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + "/sounds/message.mp3"));
@@ -39,14 +39,12 @@ namespace Messager
             friend = f;
             FriendPhoto.Source = new BitmapImage(new Uri(friend.Photo));
             t = new Thread(new ThreadStart(Update));
-            var tmp = friend.GetLastMessages();
-            messages = new ObservableCollection<Message>(friend.GetLastMessages());
-            MessageHistory.ItemsSource = messages;
-            MessageHistory.ScrollIntoView(messages.Last());
-            last_message_id = messages.Last().ID_Message;
-            last_message_status = messages.Last().Readed;
+            MessageHistory.ItemsSource = friend.MessageHistory;
+            MessageHistory.ScrollIntoView(friend.MessageHistory.Last());
+            last_message_id = friend.MessageHistory.Last().ID_Message;
+            last_message_status = friend.MessageHistory.Last().Readed;
             if (program)
-                if (messages.Last().From != nickname)
+                if (friend.MessageHistory.Last().From != nickname)
                     mp.Play();
             t.Start();
             MessageField.Focus();
@@ -74,22 +72,38 @@ namespace Messager
             while (!stop)
             {
                 Thread.Sleep(50);
-                messages = new ObservableCollection<Message>(friend.GetLastMessages());
-                MessageHistory.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                List<Message> upd = friend.GetLastMessages();
+                if (upd.Count > 0)
                 {
-                    if (last_message_id != messages.Last().ID_Message || messages.Last().Readed != last_message_status)
+                    MessageHistory.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
                     {
-                        MessageHistory.ItemsSource = messages;
-                        last_message_id = messages.Last().ID_Message;
-                        last_message_status = messages.Last().Readed;
-                        MessageHistory.ScrollIntoView(messages.Last());
-                        if (messages.Last().From != nickname)
-                        {
-                            mp.Play();
-                        }
-                    }
-
-                }));
+                        foreach (Message m in upd)
+                            if (friend.MessageHistory.Contains(m))
+                            {
+                                for (int i = friend.MessageHistory.Count - 1; i > -1; i--)
+                                {
+                                    if (friend.MessageHistory[i].ID_Message == m.ID_Message)
+                                    {
+                                        friend.MessageHistory[i].Readed = m.Readed;
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                friend.MessageHistory.Add(m);
+                                if (m.From != nickname)
+                                {
+                                    //mp.Open(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + "/sounds/message.mp3"));
+                                    mp.Open(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + "/sounds/message.mp3"));
+                                    mp.Play();
+                                }
+                                MessageHistory.ScrollIntoView(friend.MessageHistory.Last());
+                            }
+                       
+                    }));
+                }
+                    
             }
         }
 

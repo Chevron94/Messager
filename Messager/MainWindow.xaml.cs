@@ -46,12 +46,12 @@ namespace Messager
                 StaticFriends = Friends;
                 dialogs = new Dialogs(Login.Text);
                 Thread tmp = new Thread(new ThreadStart(GetAllPhotos));
-                Thread msg = new Thread(new ThreadStart(GetAllMessages));
-                msg.Start();
+                Thread msgs = new Thread(new ThreadStart(GetAllMessages));
                 tmp.Start();
+                msgs.Start();
                 foreach (var f in Friends)
                 {
-                    if (f.LastMessage.From != "" && !f.LastMessage.Readed)
+                    if (f.LastMessage.From != Login.Text && !f.LastMessage.Readed)
                     {
                         dialogs.AddFriend(f, true);
                     }
@@ -113,7 +113,8 @@ namespace Messager
                                     found = true;
                                     if (tmpFriendList[i].LastMessage.ID_Message != Friends[j].LastMessage.ID_Message)
                                     {
-                                        dialogs.AddFriend(tmpFriendList[i], true);
+                                        if (tmpFriendList[i].LastMessage.From == tmpFriendList[i].NickName)
+                                            dialogs.AddFriend(tmpFriendList[i], true);
                                         changes = true;
                                     }
                                     else

@@ -20,20 +20,20 @@
                         <RowDefinition Height="211*" />
                         <RowDefinition Height="50" />
                     </Grid.RowDefinitions>
-                    <ListBox Name="MessageHistory" Grid.ColumnSpan="3" Grid.Row="0"  ItemsSource="{Binding messages}"  >
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}" TextWrapping="WrapWithOverflow" Width="324"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListBoxItem}">
-                                <Setter Property="Background" Value="{Binding Readed, Converter={StaticResource NewMessageConverter}}" />
-                                <Setter Property="Foreground" Value="Black"/>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                    </ListBox>
-                    <TextBox Name="MessageField" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" KeyDown="MessageField_KeyDown" AcceptsReturn="True" TabIndex="0" />
+        <ListBox Name="MessageHistory" Grid.ColumnSpan="3" Grid.Row="0" ItemsSource="{Binding messages}" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" TextWrapping="Wrap"  Width="324"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Background" Value="{Binding Readed, Converter={StaticResource NewMessageConverter}}" />
+                    <Setter Property="Foreground" Value="Black"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+        <TextBox Name="MessageField" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" KeyDown="MessageField_KeyDown" AcceptsReturn="True" TabIndex="0" />
                     <Button Content="Send" Grid.Column="2" Grid.Row="1" Name="SendButton" Click="SendButton_Click" TabIndex="1" />
                     <Image Grid.Row="1" Grid.Column="0" Height="50" Name="FriendPhoto" Stretch="Fill" Width="50" Source="{Binding Photo}" />
     </Grid>

@@ -20,3 +20,7 @@ D:\Labs\разное\Messager\Messager\obj\x86\Release\Messager.csproj.GenerateR
 D:\Labs\разное\Messager\Messager\obj\x86\Release\Messager.exe
 D:\Labs\разное\Messager\Messager\obj\x86\Release\Messager.pdb
 D:\Labs\разное\Messager\Messager\obj\x86\Release\Messager.csprojResolveAssemblyReference.cache
+D:\Labs\разное\Messager\Messager\bin\Release\EntityFramework.dll
+D:\Labs\разное\Messager\Messager\bin\Release\EntityFramework.SqlServer.dll
+D:\Labs\разное\Messager\Messager\bin\Release\EntityFramework.xml
+D:\Labs\разное\Messager\Messager\bin\Release\EntityFramework.SqlServer.xml

@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="InterpalsModel.Store" Alias="Self" Provider="System.Data.SQLite" ProviderManifestToken="ISO8601" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="InterpalsModelStoreContainer">
+          <EntitySet Name="Messages" EntityType="InterpalsModel.Store.Messages" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="InterpalsModel.Store.Users" store:Type="Tables" store:Name="Users">
+            <DefiningQuery>SELECT 
+      [Users].[ID_User] AS [ID_User], 
+      [Users].[NickName] AS [NickName], 
+      [Users].[ID_Thread] AS [ID_Thread], 
+      [Users].[Age] AS [Age], 
+      [Users].[Photo] AS [Photo], 
+      [Users].[Country] AS [Country], 
+      [Users].[City] AS [City]
+      FROM [Users] AS [Users]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+        <EntityType Name="Messages">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID_Message" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="ID_Thread" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="From" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Time" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Text" Type="nvarchar" Nullable="false" />
+          <Property Name="ID" Type="integer" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'main.Users' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID_User" />
+            <PropertyRef Name="NickName" />
+            <PropertyRef Name="ID_Thread" />
+            <PropertyRef Name="Age" />
+            <PropertyRef Name="Photo" />
+            <PropertyRef Name="Country" />
+            <PropertyRef Name="City" />
+          </Key>
+          <Property Name="ID_User" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="NickName" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="ID_Thread" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="Age" Type="integer" Nullable="false" />
+          <Property Name="Photo" Type="nvarchar" Nullable="false" MaxLength="500" />
+          <Property Name="Country" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="City" Type="nvarchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="InterpalsModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="InterpalsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Messages" EntityType="InterpalsModel.Messages" />
+          <EntitySet Name="Users" EntityType="InterpalsModel.Users" />
+        </EntityContainer>
+        <EntityType Name="Messages">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID_Message" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="ID_Thread" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="From" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="Time" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="2147483647" Unicode="true" FixedLength="false" />
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID_User" />
+            <PropertyRef Name="NickName" />
+            <PropertyRef Name="ID_Thread" />
+            <PropertyRef Name="Age" />
+            <PropertyRef Name="Photo" />
+            <PropertyRef Name="Country" />
+            <PropertyRef Name="City" />
+          </Key>
+          <Property Name="ID_User" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NickName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="ID_Thread" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="Age" Type="Int64" Nullable="false" />
+          <Property Name="Photo" Type="String" Nullable="false" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Name="Country" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="City" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="InterpalsModelStoreContainer" CdmEntityContainer="InterpalsEntities">
+          <EntitySetMapping Name="Messages">
+            <EntityTypeMapping TypeName="InterpalsModel.Messages">
+              <MappingFragment StoreEntitySet="Messages">
+                <ScalarProperty Name="ID_Message" ColumnName="ID_Message" />
+                <ScalarProperty Name="ID_Thread" ColumnName="ID_Thread" />
+                <ScalarProperty Name="From" ColumnName="From" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="InterpalsModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="ID_User" ColumnName="ID_User" />
+                <ScalarProperty Name="NickName" ColumnName="NickName" />
+                <ScalarProperty Name="ID_Thread" ColumnName="ID_Thread" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="City" ColumnName="City" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="Interpals">
+        <EntityTypeShape EntityType="InterpalsModel.Messages" Width="1.5" PointX="0.75" PointY="0.75" Height="2.172587890625" IsExpanded="true" />
+        <EntityTypeShape EntityType="InterpalsModel.Users" Width="1.5" PointX="2.75" PointY="0.75" Height="2.3648893229166665" IsExpanded="true" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

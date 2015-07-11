@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="InterpalsModelStoreContainer" CdmEntityContainer="InterpalsEntities">
+    <EntitySetMapping Name="Messages">
+      <EntityTypeMapping TypeName="InterpalsModel.Messages">
+        <MappingFragment StoreEntitySet="Messages">
+          <ScalarProperty Name="ID_Message" ColumnName="ID_Message" />
+          <ScalarProperty Name="ID_Thread" ColumnName="ID_Thread" />
+          <ScalarProperty Name="From" ColumnName="From" />
+          <ScalarProperty Name="Time" ColumnName="Time" />
+          <ScalarProperty Name="Text" ColumnName="Text" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="InterpalsModel.Users">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="ID_User" ColumnName="ID_User" />
+          <ScalarProperty Name="NickName" ColumnName="NickName" />
+          <ScalarProperty Name="ID_Thread" ColumnName="ID_Thread" />
+          <ScalarProperty Name="Age" ColumnName="Age" />
+          <ScalarProperty Name="Photo" ColumnName="Photo" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="City" ColumnName="City" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

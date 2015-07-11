@@ -39,7 +39,7 @@ namespace Messager
                 friends.Add(f);
                 TabItem t = new TabItem();
                 t.Header = f.NickName;
-                MyTabItem m = new MyTabItem(f, nickname,program);
+                MyTabItem m = new MyTabItem(ref f, nickname,program);
                 t.Content = m;
                 tabControl1.Items.Add(t);
                 

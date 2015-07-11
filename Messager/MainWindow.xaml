@@ -6,6 +6,7 @@
     <Window.Resources>
         <local:OnlineConverter x:Key="OnlineConverter"/>
         <local:NewMessageConverter x:Key="NewMessageConverter"/>
+        <local:TextMessageConverter x:Key="TextMessageConverter"/>
 
         <Style x:Key="OnlineStyle" TargetType="{x:Type DataGridCell}">
             <Setter Property="Background" Value="{Binding Online, Converter={StaticResource OnlineConverter}}" />
@@ -69,7 +70,7 @@
 
                 <DataGridTextColumn Header="Country" Binding="{Binding Country}" Width="90" ElementStyle="{StaticResource TextStyle}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="City" Binding="{Binding City}" Width="80" ElementStyle="{StaticResource TextStyle}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="LastMesage" Width="150" Binding="{Binding LastMessage}" CellStyle="{StaticResource NewMessageStatus}" ElementStyle="{StaticResource TextStyleWithoutHorizontal}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="LastMesage" Width="150" Binding="{Binding LastMessage, Converter={StaticResource TextMessageConverter}}" CellStyle="{StaticResource NewMessageStatus}" ElementStyle="{StaticResource TextStyleWithoutHorizontal}" IsReadOnly="True"/>
                 <DataGridTemplateColumn Header="Messages">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
