@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<settings>
+	<save_password>true</save_password>
+	<interpals>
+		<login>Chevron94</login>
+		<password>Roman1994</password>
+	</interpals>
+</settings>
+
+
+аву же стянуть намного проще:
+Открываем список диалогов.
+Копируем ссылку на мелкую фотографию.
+(например http://th2.eu.ipstatic.net/thumbs/50x50/b7/be/682x763_253946437254344704_26567830_1.jpg)
+теперь проводим следующие махинации над ссылкой:
+1) стираем th2.
+2)/thumbs/50x50/ заменяем на /photos/
+3) если перед .jpg есть _1 (_*), то стираем это
+(http://eu.ipstatic.net/photos/b7/be/682x763_253946437254344704_26567830.jpg)

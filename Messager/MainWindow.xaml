@@ -1,0 +1,88 @@
+﻿<Window x:Class="Messager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Messager"
+        Title="Messager" Height="412" Width="660" MaxWidth="660" Closing="Window_Closing">
+    <Window.Resources>
+        <local:OnlineConverter x:Key="OnlineConverter"/>
+        <local:NewMessageConverter x:Key="NewMessageConverter"/>
+
+        <Style x:Key="OnlineStyle" TargetType="{x:Type DataGridCell}">
+            <Setter Property="Background" Value="{Binding Online, Converter={StaticResource OnlineConverter}}" />
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+        <Style x:Key="NewMessageStatus" TargetType="{x:Type DataGridCell}">
+            <Setter Property="Background" Value="{Binding LastMessage.Readed, Converter={StaticResource NewMessageConverter}}" />
+            <Setter Property="Foreground" Value="Black"/>     
+        </Style>
+        
+        <Style x:Key="TextStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style x:Key="TextStyleWithoutHorizontal" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+        </Style>
+
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="53" />
+            <ColumnDefinition Width="122" />
+            <ColumnDefinition Width="69" />
+            <ColumnDefinition Width="122" />
+            <ColumnDefinition Width="36" />
+            <ColumnDefinition Width="85" />
+            <ColumnDefinition Width="150" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="8" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <DataGrid AutoGenerateColumns="False" Name="dataGrid1" Grid.Row="3" ItemsSource="{Binding Source=Friends}" Grid.ColumnSpan="7">
+            <DataGrid.Columns>
+                
+                <DataGridTemplateColumn Header="Photo" Width="50">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Photo}" Height="50" Width="50" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="NickName" Binding="{Binding NickName}" Width="100" CellStyle="{StaticResource OnlineStyle}" ElementStyle="{StaticResource TextStyle}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Age" Binding="{Binding Age}" Width="40" ElementStyle="{StaticResource TextStyle}" IsReadOnly="True"/>
+                
+                <DataGridTemplateColumn Header="Flag" Width="40">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Country_Flag}" Height="30" Width="30"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Country" Binding="{Binding Country}" Width="90" ElementStyle="{StaticResource TextStyle}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="City" Binding="{Binding City}" Width="80" ElementStyle="{StaticResource TextStyle}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="LastMesage" Width="150" Binding="{Binding LastMessage}" CellStyle="{StaticResource NewMessageStatus}" ElementStyle="{StaticResource TextStyleWithoutHorizontal}" IsReadOnly="True"/>
+                <DataGridTemplateColumn Header="Messages">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="MessageHistory" Content="Messages" Click="MessageHistory_Click"></Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>    
+        </DataGrid>
+        <TextBox Grid.Row="1" Grid.Column="1" Name="Login" MaxLines="1" TabIndex="0"/>
+        <Button Content="Enter" Name="AuthButton" Grid.Column="5" Grid.Row="1" TabIndex="2" Click="AuthButton_Click"/>
+        <PasswordBox Grid.Row="1" Grid.Column="3" Name="Password"  Height="25" TabIndex="1" />
+        <Label Content="Login" Grid.Row="1" Grid.Column="0" Padding="4" />
+        <Label Content="Password" Grid.Column="2" Grid.Row="1" Padding="4" />
+    </Grid>
+</Window>
